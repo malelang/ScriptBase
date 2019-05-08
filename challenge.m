@@ -87,7 +87,7 @@ end
 %     MA_Seed_0 = Noise.TotalGaussianNoise; 
 %     MA_Seed_0 = [MA_Seed_0 zeros(1,length(signal(:,3))-length(MA_Seed_0))];
 % end
-    Noise = load('Noise_Seed_15');
+    Noise = load('Noise_Seed_0');
     MA_Seed_0 = Noise.TotalGaussianNoise; 
     MA_Seed_0 = [MA_Seed_0 zeros(1,length(signal(:,3))-length(MA_Seed_0))];
 %signal(:,3) = signal(:,3)+MA_Seed_0';
@@ -107,12 +107,12 @@ features=[];
 BEATQ=[];
 R=[];
 if(~isempty(abp_ind))
-   ann_abp=wabp(signal(:,abp_ind),0,1);
    M=max(signal(:,abp_ind));
    m=min(signal(:,abp_ind));
    coef1=M-m;
    MA_Scaled=(MA_Seed_0*coef1)+m;
    signal(:,abp_ind)=signal(:,abp_ind)+MA_Scaled';
+   ann_abp=wabp(signal(:,abp_ind),0,1);
    % Analyze the signal quality index of ABP using jSQI
    if length(ann_abp)>=3 % at least 3 abp beats detected
         [features] = abpfeature(signal(:,abp_ind),ann_abp);
