@@ -18,7 +18,7 @@
 %
 
 clear all;close all;clc
-data_dir=[pwd filesep];
+data_dir=[pwd '\Training' filesep];
 
 %Add the function on this directory to the MATLAB path
 %This is not permanent. This change is only valid for this session of
@@ -50,7 +50,7 @@ if(~isempty(answers))
 end
 
 fprintf('Generating validation set, please wait...\n')
-fid=fopen([data_dir 'ALARMS'],'r');
+fid=fopen([data_dir  'ALARMS'],'r');
 if(fid ~= -1)
     RECLIST=textscan(fid,'%s %s %d','Delimiter',',');
     fclose(fid);
@@ -84,7 +84,7 @@ fprintf(['Generation of validation set completed !! Total time= ' ...
     num2str(total_time) ' average time= ' num2str(averageTime) '\n'])
 fprintf(['Answer file created at : ' pwd '/answers.txt. Processing completed!!'])
 fprintf(['**Running : score2015Challenge.m to get score stats on your entry on the training set....\n'])
-score2015Challenge
+
 
 fprintf(['**Scoring complete.\n'])
 while(1)

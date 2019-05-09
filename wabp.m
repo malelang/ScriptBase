@@ -41,12 +41,14 @@ end
 ArawReal = (Araw+Offset)/Scale;
 
 %LPF 
-A = filter([1 0 0 0 0 -2 0 0 0 0 1],[1 -2 1],Araw)/24+30;
-A = (A+Offset)/Scale;
-
-A = A(4:end);  % Takes care of 4 sample group delay
+% A = filter([1 0 0 0 0 -2 0 0 0 0 1],[1 -2 1],Araw)/24+30;
+% A = (A+Offset)/Scale;
+% 
+% A = A(4:end);  % Takes care of 4 sample group delay
 
 % Slope-sum function ... not used?
+A = ArawReal;
+
 x = zeros(size(A));
 
 dyneg = [A' 0] - [0 A'];
