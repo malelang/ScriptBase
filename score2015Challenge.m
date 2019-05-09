@@ -43,7 +43,6 @@ GOLD_TRUTH=GOLD{3};
 %same order, so we search for the location of the individual records in
 %ANSWER file
 for n=1:N
-    
     alarm_ind=strcmp(ALARMS{n},ALARM_TYPES);
     if(isempty(alarm_ind))
         error(['Unexpected alarm type: ' ALARMS{n} ' . Expected alarm types are: ' ALARM_TYPES{:} ])
@@ -51,7 +50,7 @@ for n=1:N
     
     rec_ind=strmatch(RECORDS{n},ANSWERS{1});
     if(isempty(rec_ind))
-        warning(['Could not find answer for record: ' RECORDS{n} , ' setting it to a false alarm.'])
+        warning(['Could not find answer for record: '   RECORDS{n} , ' setting it to a false alarm.'])
         this_answer=0;
     else
         this_answer=ANSWERS{2}(rec_ind);

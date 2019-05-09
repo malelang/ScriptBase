@@ -69,7 +69,7 @@ for i=1:N
     tic;
     display(['results(' num2str(i) ')=challenge(''' data_dir fname ''','''  ALARMS{i} ''');'])
     try
-        results(i)=challenge([data_dir fname],ALARMS{i});
+        results(i)=challenge([data_dir fname],ALARMS{i},i);
     catch
         warning(lasterr)
     end
