@@ -37,8 +37,11 @@ P=round(125);
 Araw = resample(Araw, P, Q);
 end
 
-
-ArawReal = (Araw+Offset)/Scale;
+ % Denoising process with wts
+[C,L] = wavedec(Araw,9,'db8'); 
+A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
+cleanedSignal = detrend(A3);
+A = (cleanedSignal+Offset)/Scale;
 
 %LPF 
 % A = filter([1 0 0 0 0 -2 0 0 0 0 1],[1 -2 1],Araw)/24+30;
@@ -47,7 +50,7 @@ ArawReal = (Araw+Offset)/Scale;
 % A = A(4:end);  % Takes care of 4 sample group delay
 
 % Slope-sum function ... not used?
-A = ArawReal;
+
 
 x = zeros(size(A));
 
