@@ -37,6 +37,11 @@ P=round(125);
 Araw = resample(Araw, P, Q);
 end
 
+% if(isnan(Araw))
+%     r=[];
+%     return 
+% end
+
  % Denoising process with wts
 [C,L] = wavedec(Araw,9,'db8'); 
 A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
