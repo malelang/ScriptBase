@@ -51,7 +51,6 @@ A = (cleanedSignal+Offset)/Scale;
 
 % Slope-sum function ... not used?
 
-
 x = zeros(size(A));
 
 dyneg = [A' 0] - [0 A'];
