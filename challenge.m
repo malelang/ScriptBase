@@ -145,7 +145,7 @@ end
 if(numRecord>700)
     Noise = load('Noise_Seed_m085');
     MA_Seed = Noise.TotalGaussianNoise; 
-    MA_Seed = [MA_Seed zeros(1,length(signal(:,3))-length(MA_Seed))];yu
+    MA_Seed = [MA_Seed zeros(1,length(signal(:,3))-length(MA_Seed))];
 end
 %     Noise = load('Noise_Seed_0');
 %     MA_Seed_0 = Noise.TotalGaussianNoise; 
