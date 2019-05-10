@@ -32,15 +32,10 @@ end
 
 % if the sample frequency is not 125, resample to 125
 if Fs~=125
-Q=round(Fs);
+Q=round(Fs)
 P=round(125);
 Araw = resample(Araw, P, Q);
 end
-
-% if(isnan(Araw))
-%     r=[];
-%     return 
-% end
 
  % Denoising process with wts
 [C,L] = wavedec(Araw,9,'db8'); 
@@ -48,15 +43,7 @@ A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
 cleanedSignal = detrend(A3);
 A = (cleanedSignal+Offset)/Scale;
 
-%LPF 
-% A = filter([1 0 0 0 0 -2 0 0 0 0 1],[1 -2 1],Araw)/24+30;
-% A = (A+Offset)/Scale;
-% 
-% A = A(4:end);  % Takes care of 4 sample group delay
-
 % Slope-sum function ... not used?
-
-
 x = zeros(size(A));
 
 dyneg = [A' 0] - [0 A'];
