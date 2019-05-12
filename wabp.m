@@ -37,7 +37,7 @@ P=round(125);
 Araw = resample(Araw, P, Q);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIGINAL FILE%%%%%%%%%%%%%%%%%
- %A = (Araw+Offset)/Scale;
+% A = (Araw+Offset)/Scale;
 % LPF 
 % A = filter([1 0 0 0 0 -2 0 0 0 0 1],[1 -2 1],Araw)/24+30;
 % A = (A+Offset)/Scale;
@@ -51,35 +51,21 @@ end
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
 
-% % Slope-sum function ... not used?
-% x = zeros(size(A));
 %%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET db6 at 4 levels%%%%%%%%%%%%%%
-%Denoising process with wts
 % [C,L] = wavedec(Araw,4,'db6'); 
 % A3 = wrcoef('a',C,L,'db6',4); % mejor linea base
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
-% 
-% % Slope-sum function ... not used?
 %%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET db10 at 4 levels%%%%%%%%%%%%%%
-%Denoising process with wts
 % [C,L] = wavedec(Araw,4,'db10'); 
 % A3 = wrcoef('a',C,L,'db10',4); % mejor linea base
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
-% 
-% % Slope-sum function ... not used?
-% x = zeros(size(A));
 %%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET db6 at 5 levels%%%%%%%%%%%%%%
-%Denoising process with wts
 % [C,L] = wavedec(Araw,5,'db6'); 
 % A3 = wrcoef('a',C,L,'db6',5); % mejor linea base
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
-%%%%%%%%%%%%%%%%%%%%%%%%%%Savitzky-Golay Smoothing Filter%%%%%
- A3=sgolayfilt(Araw,3,41);
- cleanedSignal = detrend(A3);
- A = (cleanedSignal+Offset)/Scale;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET SYMLET 4 WITH 3 LEVELS%%%%%%%%
 % [C,L] = wavedec(Araw,3,'sym4'); 
 % A3 = wrcoef('a',C,L,'sym4',3); % mejor linea base
@@ -90,6 +76,10 @@ end
 % A3 = wrcoef('a',C,L,'sym6',3); % mejor linea base
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
+%%%%%%%%%%%%%%%%%%%%%%%%%%Savitzky-Golay Smoothing Filter%%%%%
+ A3=sgolayfilt(Araw,3,41);
+ cleanedSignal = detrend(A3);
+ A = (cleanedSignal+Offset)/Scale;
 
 dyneg = [A' 0] - [0 A'];
 dyneg(find(dyneg>0)) = 0;
