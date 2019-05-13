@@ -36,7 +36,6 @@ Q=round(Fs)
 P=round(125);
 Araw = resample(Araw, P, Q);
 end
-<<<<<<< HEAD
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIGINAL FILE%%%%%%%%%%%%%%%%%
 % A = (Araw+Offset)/Scale;
 % LPF 
@@ -51,14 +50,13 @@ end
 % A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
-=======
 
- % Denoising process with wts
-[C,L] = wavedec(Araw,9,'db8'); 
-A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
-cleanedSignal = detrend(A3);
-A = (cleanedSignal+Offset)/Scale;
->>>>>>> 5cd625cabcf07a2f5dde0b687c0de5f79379346a
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%wavelets db8 level 3%%%%%%%%%%%%%
+% [C,L] = wavedec(Araw,3,'db8'); 
+% A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
+% cleanedSignal = detrend(A3);
+% A = (cleanedSignal+Offset)/Scale;
+% >>>>>>> 5cd625cabcf07a2f5dde0b687c0de5f79379346a
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET db6 at 4 levels%%%%%%%%%%%%%%
 % [C,L] = wavedec(Araw,4,'db6'); 
@@ -86,10 +84,13 @@ A = (cleanedSignal+Offset)/Scale;
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
 %%%%%%%%%%%%%%%%%%%%%%%%%%Savitzky-Golay Smoothing Filter%%%%%
- A3=sgolayfilt(Araw,3,41);
- cleanedSignal = detrend(A3);
- A = (cleanedSignal+Offset)/Scale;
-
+%  A3=sgolayfilt(Araw,3,41);
+%  cleanedSignal = detrend(A3);
+%  A = (cleanedSignal+Offset)/Scale;
+%%%%%%%%%%%%%%%%%%%%%%%%%%EMPIRICAL DECOMPOSITION METHOD%%%%%%%
+cleanedSignal = emd_dfadenoising (Araw);
+cleanedSignal = cleanedSignal';
+A = (cleanedSignal+Offset)/Scale;
 dyneg = [A' 0] - [0 A'];
 dyneg(find(dyneg>0)) = 0;
 
