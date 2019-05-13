@@ -36,6 +36,7 @@ Q=round(Fs)
 P=round(125);
 Araw = resample(Araw, P, Q);
 end
+<<<<<<< HEAD
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIGINAL FILE%%%%%%%%%%%%%%%%%
 % A = (Araw+Offset)/Scale;
 % LPF 
@@ -50,6 +51,14 @@ end
 % A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
+=======
+
+ % Denoising process with wts
+[C,L] = wavedec(Araw,9,'db8'); 
+A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
+cleanedSignal = detrend(A3);
+A = (cleanedSignal+Offset)/Scale;
+>>>>>>> 5cd625cabcf07a2f5dde0b687c0de5f79379346a
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET db6 at 4 levels%%%%%%%%%%%%%%
 % [C,L] = wavedec(Araw,4,'db6'); 
