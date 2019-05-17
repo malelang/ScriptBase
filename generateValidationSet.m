@@ -1,5 +1,5 @@
 %This script will generate the validation set that will be used for
-%cross-checking by the PhysionNet servers.
+%cross-checking by the PhysioNet servers.
 %
 %In order to be compatible with the testing environment,
 %you should have the training set located at the subdirectory the top
@@ -10,7 +10,7 @@
 % This location is where the scoring server expects the validating annotations % to reside.
 %
 % This script was only tested in MATLAB (we have not tested in Octave).
-%
+%N
 %
 %         Written by Ikaro Silva January 27, 2015.
 %         Last Modified:
@@ -18,8 +18,7 @@
 %
 
 clear all;close all;clc
-data_dir=[pwd '/Training' filesep];
-
+data_dir=[pwd '\training' filesep];
 %Add the function on this directory to the MATLAB path
 %This is not permanent. This change is only valid for this session of
 %MATLAB (will reset once MATLAB is restarted).
@@ -50,7 +49,7 @@ if(~isempty(answers))
 end
 
 fprintf('Generating validation set, please wait...\n')
-fid=fopen([data_dir  'ALARMS'],'r');
+fid=fopen([data_dir 'ALARMS'],'r');
 if(fid ~= -1)
     RECLIST=textscan(fid,'%s %s %d','Delimiter',',');
     fclose(fid);
@@ -82,7 +81,7 @@ end
 averageTime = total_time/N;
 fprintf(['Generation of validation set completed !! Total time= ' ...
     num2str(total_time) ' average time= ' num2str(averageTime) '\n'])
-fprintf(['Answer file created at : ' pwd '/answers.txt. Processing completed!!'])
+fprintf(['Answer file created at : ' pwd 'answers.txt. Processing completed!!'])
 fprintf(['**Running : score2015Challenge.m to get score stats on your entry on the training set....\n'])
 score2015Challenge
 
@@ -106,7 +105,6 @@ if(strcmp(cont,'Y'))
     %This will not package any sub-directories !
     zip('entry.zip',{'*.m','*.txt','*.sh'});
 end
-
 
 
 
