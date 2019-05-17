@@ -37,9 +37,13 @@ P=round(125);
 Araw = resample(Araw, P, Q);
 end
 
+
+
  % Denoising process with wts
-[C,L] = wavedec(Araw,9,'db8'); 
-A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
+[C,L] = wavedec(Araw,3,'db8'); 
+[thr,sorh,keepapp]=ddencmp('den','wv',Araw);
+A3=wdencmp('gbl',C,L,'db8',3,thr,sorh,keepapp);
+% A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
 cleanedSignal = detrend(A3);
 A = (cleanedSignal+Offset)/Scale;
 

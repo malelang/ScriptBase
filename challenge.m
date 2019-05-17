@@ -189,7 +189,7 @@ if (~isempty(ppg_ind))
     m=min(signal(:,ppg_ind));
     coef1=M-m;
     MA_Scaled=(MA_Seed*coef1)+m;
-    signal(:,ppg_ind)=signal(:,ppg_ind)+MA_Scaled';
+    signal2(:,ppg_ind)=signal(:,ppg_ind)+MA_Scaled';
     y=quantile(signal(:,ppg_ind),[0.05,0.5,0.95]);
     ann_ppg=wabp(signal(:,ppg_ind),0,(y(3)-y(1))/120);
     % Analyze the signal quality index of PPG 
