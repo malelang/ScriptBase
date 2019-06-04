@@ -18,7 +18,7 @@
 %
 
 clear all;close all;clc
-data_dir=[pwd '\training' filesep];
+data_dir=[pwd '/Training' filesep];
 %Add the function on this directory to the MATLAB path
 %This is not permanent. This change is only valid for this session of
 %MATLAB (will reset once MATLAB is restarted).

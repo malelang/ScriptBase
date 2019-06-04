@@ -91,8 +91,8 @@ if(numRecord<=50)
     Noise = load('Noise_Seed_m03');
     MA_Seed = Noise.TotalGaussianNoise; 
     Rest = MA_Seed(1:(length(signal(:,3))-length(MA_Seed)));
-    MA_Seed = [MA_Seed Rest];    
-%     MA_Seed = [MA_Seed zeros(1,length(signal(:,3))-length(MA_Seed))];
+   MA_Seed = [MA_Seed Rest];    
+%    MA_Seed = [MA_Seed zeros(1,length(signal(:,3))-length(MA_Seed))];
 end
 if(numRecord>50 && numRecord<=100)
     Noise = load('Noise_Seed_m06');
@@ -230,7 +230,7 @@ if (~isempty(ppg_ind))
     m=min(signal(:,ppg_ind));
     coef1=M-m;
     MA_Scaled=(MA_Seed*coef1)+m;
-    signal2(:,ppg_ind)=signal(:,ppg_ind)+MA_Scaled';
+    signal(:,ppg_ind)=signal(:,ppg_ind)+MA_Scaled';
     y=quantile(signal(:,ppg_ind),[0.05,0.5,0.95]);
     ann_ppg=wabp(signal(:,ppg_ind),0,(y(3)-y(1))/120);
     % Analyze the signal quality index of PPG 
