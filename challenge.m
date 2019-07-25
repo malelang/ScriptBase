@@ -1,4 +1,4 @@
-function alarmResult=challenge(recordName,alarm_type,numRecord)
+function [alarmResult,low_hr,high_hr,sqi,aop]=challenge(recordName,alarm_type,numRecord)
 %
 %  alarmResult=challenge(recordName,alarm_type)
 %
@@ -86,7 +86,14 @@ end
 %     MA_Seed = Noise.TotalGaussianNoise; 
 %     MA_Seed = [MA_Seed zeros(1,length(signal(:,3))-length(MA_Seed))];
 %  end
-%signal(:,3)=(signal(:,3)-min(signal(:,3)))/(max(signal(:,3))-min(signal(:,3)));
+
+% %%%%%%%%% JUST ONE SEED
+% Noise=load('Noise_Seed_02');
+% MA_Seed=Noise.TotalGaussianNoise;
+% Rest = MA_Seed(1:(length(signal)-length(MA_Seed)));
+% MA_Seed = [MA_Seed Rest];
+
+%%%%%%%%%%%%%%%%%%%% SEED VALUES WITHIN POOL
 if(numRecord<=50)
     Noise = load('Noise_Seed_m03');
     MA_Seed = Noise.TotalGaussianNoise; 
@@ -137,7 +144,7 @@ if(numRecord>300 && numRecord<=350)
 %     MA_Seed = [MA_Seed zeros(1,length(signal(:,3))-length(MA_Seed))];
 end
 if(numRecord>350 && numRecord<=400)
-    Noise = load('Noise_Seed_m125');
+    Noise = load('Noise_Seed_m1');
     MA_Seed = Noise.TotalGaussianNoise; 
     Rest = MA_Seed(1:(length(signal(:,3))-length(MA_Seed)));
     MA_Seed = [MA_Seed Rest];
@@ -179,7 +186,7 @@ if(numRecord>600 && numRecord<=650)
 %     MA_Seed = [MA_Seed zeros(1,length(signal(:,3))-length(MA_Seed))];
 end
 if(numRecord>650 && numRecord<=700)
-    Noise = load('Noise_Seed_m065');
+    Noise = load('Noise_Seed_m14');
     MA_Seed = Noise.TotalGaussianNoise; 
     Rest = MA_Seed(1:(length(signal(:,3))-length(MA_Seed)));
     MA_Seed = [MA_Seed Rest];
@@ -196,12 +203,11 @@ end
 %%Users can access the raw samples of the record by running the following
 %command if WFDB Toolbox installed:
 %[tm,signal]=rdsamp(recordName);
-
 %%For more information please see the help in RDSAMP
-
 %Run WABP on the record, which by default will analyze the first ABP, ART, or BP signal
 N=[];
 N0=[];
+
 % It is verified if there is ABP signal onto signals
 abp_ind=get_index(description,'ABP');
 ann_abp=[];
@@ -209,12 +215,22 @@ features=[];
 BEATQ=[];
 R=[];
 if(~isempty(abp_ind))
+    if(alarm_type=="Tachycardia" || alarm_type=="Bradycardia")
+        stop=1;
+    end
    M=max(signal(:,abp_ind));
    m=min(signal(:,abp_ind));
    coef1=M-m;
    MA_Scaled=(MA_Seed*coef1)+m;
    signal(:,abp_ind)=signal(:,abp_ind)+MA_Scaled';
-   ann_abp=wabp(signal(:,abp_ind),0,1);
+   if(alarm_type=="Tachycardia")
+       denoisingCase=3;
+   elseif(alarm_type=="Bradycardia")
+       denoisingCase=5;
+   else
+       denoisingCase=5;
+   end
+   ann_abp=wabp(denoisingCase,signal(:,abp_ind),0,1);
    % Analyze the signal quality index of ABP using jSQI
    if length(ann_abp)>=3 % at least 3 abp beats detected
         [features] = abpfeature(signal(:,abp_ind),ann_abp);
@@ -226,13 +242,23 @@ end
 ppg_ind=get_index(description,'PLETH');
 ann_ppg=[];
 if (~isempty(ppg_ind))
+    if(alarm_type=="Tachycardia" || alarm_type=="Bradycardia")
+        stop=1;
+    end
     M=max(signal(:,ppg_ind));
     m=min(signal(:,ppg_ind));
     coef1=M-m;
     MA_Scaled=(MA_Seed*coef1)+m;
     signal(:,ppg_ind)=signal(:,ppg_ind)+MA_Scaled';
+    if(alarm_type=="Tachycardia")
+       denoisingCase=3;
+    elseif(alarm_type=="Bradycardia")
+       denoisingCase=5;
+    else
+       denoisingCase=5;
+    end
     y=quantile(signal(:,ppg_ind),[0.05,0.5,0.95]);
-    ann_ppg=wabp(signal(:,ppg_ind),0,(y(3)-y(1))/120);
+    ann_ppg=wabp(denoisingCase,signal(:,ppg_ind),0,(y(3)-y(1))/120);
     % Analyze the signal quality index of PPG 
     if ~isempty(ann_ppg)
         [psqi]=ppgSQI(signal(:,ppg_ind),ann_ppg);
@@ -309,7 +335,43 @@ if ~isempty(ann_ppg)
 else
     ppgsqi=0;
 end
-
+% escribir los datos para ver su variación
+if(alarm_type=="Bradycardia")
+    if ~isnan(low_hr_abp)
+        low_hr=low_hr_abp;
+        sqi=abpsqi;
+        aop=1;
+    else
+        low_hr=low_hr_ppg;
+        sqi=ppgsqi;
+        aop=0;
+    end
+    high_hr=0;
+%     if(~isempty(ann_abp))
+%         sqi=abpsqi;
+%     else
+%         sqi=ppgsqi;
+%     end
+elseif(alarm_type=="Tachycardia")
+    if ~isnan(high_hr_abp)
+        high_hr=high_hr_abp;
+        aop=1;
+    else
+        high_hr=high_hr_ppg;
+        aop=0;
+    end
+    low_hr=0;
+    if(~isempty(ann_abp))
+        sqi=abpsqi;
+    else
+        sqi=ppgsqi;
+    end
+else
+    high_hr=NaN;
+    low_hr=NaN;
+    sqi=NaN;
+    aop=NaN;
+end
 % SQI threshold
 sqi_th = 0.9;
 

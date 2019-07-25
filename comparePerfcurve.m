@@ -4,10 +4,11 @@ function comparePerfcurve(realData,forecastOriginal,forecastNoisy,forecastDenois
     [XROCnoi,YROCnoi,~,AUCnoi]=perfcurve(realData,forecastNoisy,1);
     [XROCden,YROCden,~,AUCden]=perfcurve(realData,forecastDenoised,1);
     
+    cols = [200 45 43; 37 64 180; 0 176 80; 0 0 0]/255;
     figure; hold on;
-    plot(XROCorig,YROCorig),hold on,
-    plot(XROCnoi,YROCnoi),hold on,
-    plot(XROCden,YROCden),hold on,
+    plot(XROCorig,YROCorig,'-', 'color', cols(1,:),'LineWidth',2),hold on,
+    plot(XROCnoi,YROCnoi,'-', 'color', cols(2,:),'LineWidth',2),hold on,
+    plot(XROCden,YROCden,'-', 'color', cols(3,:),'LineWidth',2),hold on,
     plot([0 1], [0 1],'-k');
     axis([0 1 0 1]);
     xlabel('FPR'); ylabel('TPR')

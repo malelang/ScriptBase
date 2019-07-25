@@ -50,6 +50,10 @@ reallabelstachy=[];
 reallabelsbrady=[];
 forecastbrady=[];
 forecasttachy=[];
+totaltruestach=0;
+totalfalsestach=0;
+totaltruesbrad=0;
+totalfalsesbrad=0;
 %We do not assume that the Gold-standar and the Answers are sorted in the
 %same order, so we search for the location of the individual records in
 %ANSWER file
@@ -91,12 +95,14 @@ for n=1:N
         if(this_answer ~=0)
         %Positive cases
             if(GOLD_TRUTH(n) == 1)
+                totaltruestach=totaltruestach+1;
                 %True positive
                 TPTach=[TPTach 1];
                 FPTach=[FPTach 0];
                 TNTach=[TNTach 0];
                 FNTach=[FNTach 0];
             else
+                totalfalsestach=totalfalsestach+1;
                 %False positive
                 TPTach=[TPTach 0];
                 FPTach=[FPTach 1];
@@ -106,6 +112,7 @@ for n=1:N
         else
             %Negative cases
             if(GOLD_TRUTH(n) == 1)
+                totaltruestach=totaltruestach+1;
                 %False negative
                 TPTach=[TPTach 0];
                 FPTach=[FPTach 0];
@@ -113,6 +120,7 @@ for n=1:N
                 FNTach=[FNTach 1];
             else
                 %True negative
+                totalfalsestach=totalfalsestach+1;
                 TPTach=[TPTach 0];
                 FPTach=[FPTach 0];
                 TNTach=[TNTach 1];
@@ -126,12 +134,14 @@ for n=1:N
         %Positive cases
             if(GOLD_TRUTH(n) == 1)
                 %True positive
+                totaltruesbrad=totaltruesbrad+1;
                 TPBrad=[TPBrad 1];
                 FPBrad=[FPBrad 0];
                 TNBrad=[TNBrad 0];
                 FNBrad=[FNBrad 0];
             else
                 %False positive
+                totalfalsesbrad=totalfalsesbrad+1;
                 TPBrad=[TPBrad 0];
                 FPBrad=[FPBrad 1];
                 TNBrad=[TNBrad 0];
@@ -140,12 +150,14 @@ for n=1:N
         else
             %Negative cases
             if(GOLD_TRUTH(n) == 1)
+                totaltruesbrad=totaltruesbrad+1;
                 %False negative
                 TPBrad=[TPBrad 0];
                 FPBrad=[FPBrad 0];
                 TNBrad=[TNBrad 0];
                 FNBrad=[FNBrad 1];
             else
+                totalfalsesbrad=totalfalsesbrad+1;
                 %True negative
                 TPBrad=[TPBrad 0];
                 FPBrad=[FPBrad 0];

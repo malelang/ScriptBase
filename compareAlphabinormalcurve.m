@@ -17,9 +17,9 @@ function compareAlphabinormalcurve(realData,forecastOriginal,forecastNoisy,forec
         forecastDenoised(d(i))=-1;
     end
     
-    [TPR_abinOriginal, FPR_abinOriginal, ~, AUC_abinOriginal] = prc_stats_binormal(realData, forecastOriginal,true);
-    [TPR_abinNoisy, FPR_abinNoisy, ~, AUC_abinNoisy] = prc_stats_binormal(realData, forecastNoisy,true);
-    [TPR_abinDenoised, FPR_abinDenoised, ~, AUC_abinDenoised] = prc_stats_binormal(realData, forecastDenoised,true);
+    [TPR_abinOriginal, FPR_abinOriginal, ~, AUC_abinOriginal] = prc_stats_binormal(realData, forecastOriginal,false);
+    [TPR_abinNoisy, FPR_abinNoisy, ~, AUC_abinNoisy] = prc_stats_binormal(realData, forecastNoisy,false);
+    [TPR_abinDenoised, FPR_abinDenoised, ~, AUC_abinDenoised] = prc_stats_binormal(realData, forecastDenoised,false);
     cols = [200 45 43; 37 64 180; 0 176 80; 0 0 0]/255;
     figure; hold on;
     plot(FPR_abinOriginal,TPR_abinOriginal,'-', 'color', cols(1,:), 'linewidth', 2);

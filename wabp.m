@@ -1,4 +1,4 @@
-function r = wabp(Araw, Offset,Scale, Fs)
+function r = wabp(denoisingCase, Araw, Offset,Scale, Fs)
 % r = wabp(Araw,Offset,Scale, Fs);
 % Input: Araw (125Hz sampled) waveform in wfdb-MIT format, 
 %        Offset, Scale
@@ -13,7 +13,7 @@ function r = wabp(Araw, Offset,Scale, Fs)
 % based upon wabp.c by Wei Zong (www.physionet.org)
 
 % if the signal is not at 125Hz, then resample it.
-if nargin<4
+if nargin<5
 Fs=125;
 end
 
@@ -32,19 +32,20 @@ end
 
 % if the sample frequency is not 125, resample to 125
 if Fs~=125
-Q=round(Fs)
+Q=round(Fs);
 P=round(125);
 Araw = resample(Araw, P, Q);
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIGINAL FILE%%%%%%%%%%%%%%%%%
- %A = (Araw+Offset)/Scale;
-%LPF 
-A = filter([1 0 0 0 0 -2 0 0 0 0 1],[1 -2 1],Araw)/24+30;
-A = (A+Offset)/Scale;
-A = A(4:end);  % Takes care of 4 sample group delay
-% Slope-sum function ... not used?
-x = zeros(size(A));
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WITHOUT ANY FILTER%%%%%%%%%%%%%%%%%
+%A = (Araw+Offset)/Scale;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WITH ORIGINAL FILTER %%%%%%%%%%%%%%%%%
+% %LPF 
+% A = filter([1 0 0 0 0 -2 0 0 0 0 1],[1 -2 1],Araw)/24+30;
+% A = (A+Offset)/Scale;
+% A = A(4:end);  % Takes care of 4 sample group delay
+% % Slope-sum function ... not used?
+% x = zeros(size(A));
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%wavelets db8 level 3%%%%%%%%%%%%%
 % [C,L] = wavedec(Araw,3,'db8'); 
 % A3 = wrcoef('a',C,L,'db8',3); % mejor linea base
@@ -56,25 +57,29 @@ x = zeros(size(A));
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
 %%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET db10 at 4 levels%%%%%%%%%%%%%%
-% [C,L] = wavedec(Araw,4,'db10'); 
-% A3 = wrcoef('a',C,L,'db10',4); % mejor linea base
-% cleanedSignal = detrend(A3);
-% A = (cleanedSignal+Offset)/Scale;
+% if(denoisingCase==3)
+%     [C,L] = wavedec(Araw,4,'db10'); 
+%     A3 = wrcoef('a',C,L,'db10',4); % mejor linea base
+%     cleanedSignal = detrend(A3);
+%     A = (cleanedSignal+Offset)/Scale;
+% end
 %%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET db6 at 5 levels%%%%%%%%%%%%%%
-% [C,L] = wavedec(Araw,5,'db6'); 
-% A3 = wrcoef('a',C,L,'db6',5); % mejor linea base
-% cleanedSignal = detrend(A3);
-% A = (cleanedSignal+Offset)/Scale;
+%  [C,L] = wavedec(Araw,5,'db6'); 
+%  A3 = wrcoef('a',C,L,'db6',5); % mejor linea base
+%  cleanedSignal = detrend(A3);
+%  A = (cleanedSignal+Offset)/Scale;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET SYMLET 4 WITH 3 LEVELS%%%%%%%%
-% [C,L] = wavedec(Araw,3,'sym4'); 
-% A3 = wrcoef('a',C,L,'sym4',3); % mejor linea base
-% cleanedSignal = detrend(A3);
-% A = (cleanedSignal+Offset)/Scale;
+% if(denoisingCase==5)
+    [C,L] = wavedec(Araw,3,'sym4'); 
+    A3 = wrcoef('a',C,L,'sym4',3); % mejor linea base
+    cleanedSignal = detrend(A3);
+    A = (cleanedSignal+Offset)/Scale;
+% end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%WAVELET SYMLET 6 WITH 3 LEVELS%%%%%%%%
-% [C,L] = wavedec(Araw,3,'sym6'); 
-% A3 = wrcoef('a',C,L,'sym6',3); % mejor linea base
-% cleanedSignal = detrend(A3);
-% A = (cleanedSignal+Offset)/Scale;
+%  [C,L] = wavedec(Araw,3,'sym6'); 
+%  A3 = wrcoef('a',C,L,'sym6',3); % mejor linea base
+%  cleanedSignal = detrend(A3);
+%  A = (cleanedSignal+Offset)/Scale;
 %%%%%%%%%%%%%%%%%%%%%%%%%%Savitzky-Golay Smoothing Filter%%%%%
 %  A3=sgolayfilt(Araw,3,41);
 %  cleanedSignal = detrend(A3);
@@ -89,12 +94,17 @@ x = zeros(size(A));
 % cleanedSignal = detrend(A3);
 % A = (cleanedSignal+Offset)/Scale;
 %%%%%%%%%%%%%%%%%%%%%%%%%%% wavelets with thresholding %%%%%%%%%
-% [C,L] = wavedec(Araw,4,'db10'); 
+%method 1
+
+%method 2
+% [C,L] = wavedec(Araw,9,'sym4'); 
 % [thr,sorh,keepapp]=ddencmp('den','wv',Araw);
-%  cleanedSignal=wdencmp('gbl',C,L,'db10',4,thr,sorh,keepapp);
-%  A3= detrend(cleanedSignal);
+%  cleanedSignal=wdencmp('gbl',C,L,'sym4',9,thr,sorh,keepapp);
+% A3= detrend(cleanedSignal);
 %  A=(A3+Offset)/Scale;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%butterworth filtering%%%%%%%%%%%%%%%%%%%%%%
+%  [bl_abp,al_abp] = butter(2,0.5*2/Fs,'high');
+%     A3=filtfilt(bl_abp,al_abp,cleanedSignal);
 
 dyneg = [A' 0] - [0 A'];
 dyneg(find(dyneg>0)) = 0;

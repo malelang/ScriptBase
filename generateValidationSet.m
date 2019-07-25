@@ -6,7 +6,7 @@
 %directory of where this file unzips (ie, where challenge.m is located)
 %
 % Once this script is run, the generated annotation files when then be moved to % ./challenge/2015/set-p/ (or .\challenge\20145set-p\ in Windows).
-%
+%555
 % This location is where the scoring server expects the validating annotations % to reside.
 %
 % This script was only tested in MATLAB (we have not tested in Octave).
@@ -61,6 +61,10 @@ RECORDS=RECLIST{1};
 ALARMS=RECLIST{2};
 N=length(RECORDS);
 results=zeros(N,1);
+lhr=zeros(N,1);
+hhr=zeros(N,1);
+sqi=zeros(N,1);
+aop=zeros(N,1);
 
 total_time=0;
 for i=1:N
@@ -68,13 +72,28 @@ for i=1:N
     tic;
     display(['results(' num2str(i) ')=challenge(''' data_dir fname ''','''  ALARMS{i} ''');'])
     try
-        results(i)=challenge([data_dir fname],ALARMS{i},i);
+        [results(i),lhr(i),hhr(i),sqi(i),aop(i)] =challenge([data_dir fname],ALARMS{i},i);
     catch
         warning(lasterr)
     end
     total_time=total_time+toc;
     if(~mod(i,10))
         fprintf(['---Processed ' num2str(i) ' out of ' num2str(N) ' records.\n'])
+    end
+end
+% THIS PIECE OF CODE WAS MADE FOR MEASURING THE VARIANCE OF THE DECISION
+% RESULTS IN ORDER TO EVALUATE THE PRESENCE OF THE NOISE IN THE SIGNAL.
+featurestachy=[];
+featuresbrady=[];
+tachcount=1;
+bradcount=1;
+for i=1:N
+    if(ALARMS{i}=="Tachycardia")
+        featurestachy(tachcount,:)=[hhr(i) sqi(i) aop(i)];
+        tachcount=tachcount+1;
+    elseif(ALARMS{i}=="Bradycardia")
+        featuresbrady(bradcount,:)=[lhr(i) sqi(i) aop(i)];
+        bradcount=bradcount+1;
     end
 end
 

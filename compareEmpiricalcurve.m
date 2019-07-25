@@ -1,4 +1,4 @@
-function compareEmpiricalcurve(realData,forecastOriginal,forecastNoisy,forecastDenoised,bradyflag)
+function [TPR_empOriginal, FPR_empOriginal,TPR_empNoisy, FPR_empNoisy,TPR_empDenoised, FPR_empDenoised]=compareEmpiricalcurve(realData,forecastOriginal,forecastNoisy,forecastDenoised,bradyflag)
 
     a=find(realData==0);
     b=find(forecastOriginal==0);
@@ -24,7 +24,7 @@ function compareEmpiricalcurve(realData,forecastOriginal,forecastNoisy,forecastD
     figure; hold on;
     plot(FPR_empOriginal,TPR_empOriginal,'-^', 'color', cols(1,:), 'linewidth', 2);
     plot(FPR_empNoisy,TPR_empNoisy,'--', 'color', cols(2,:), 'linewidth', 2);
-    plot(FPR_empDenoised,TPR_empDenoised,'-*', 'color', cols(3,:), 'linewidth', 2);
+    plot(FPR_empDenoised,TPR_empDenoised,'-', 'color', cols(3,:), 'linewidth', 2);
     plot([0 1], [0 1],'-k');
     axis([0 1 0 1]);
     xlabel('FPR'); ylabel('TPR')
